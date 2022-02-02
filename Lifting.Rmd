@@ -7,12 +7,31 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(plotly)
 ```
 
-##Playing around
+##Setup
 
 ```{r}
-d <- read.csv(Sys.getenv("lift_site"))
-d
+d <- read.csv(Sys.getenv("lift_site")) %>% rename(Weight=Weight.Amount..lbs.) %>%
+  mutate(Date=as.Date(mdy_hms(Timestamp)))
+
+```
+
+
+##Bench
+
+```{r}
+bp<-d %>% filter(Exercise=="Bench Press") %>% group_by(Date) %>% 
+  summarise(Average=weighted.mean(Weight,w = Reps))
+
+fig<-d%>%
+  group_by(Exercise) %>%
+  do(p=plot_ly(., x = ~Date, y = ~Weight, type = "scatter", opacity = 0.5,
+               mode = "markers",marker = list(color = "blue"))) 
+
+fig$p[[1]]
 ```
 
