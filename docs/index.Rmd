@@ -49,5 +49,15 @@ ggplotly(bp_plot)
 ```
 
 
+# Squat
 
+```{r}
+bp_plot<-bp %>% filter(Exercise=="Squat") %>% 
+  ggplot(.,aes(x=Date,y=Average)) + geom_line() +geom_point(color="red") +
+  geom_point(data = d[d$Exercise=="Squat",],aes(x=Date,y=Weight),color="blue",alpha=.1) + theme_classic()
+```
+
+```{r,echo=F}
+ggplotly(bp_plot)
+```
 
