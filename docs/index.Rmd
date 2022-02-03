@@ -1,0 +1,53 @@
+---
+title: |
+    | Lift Tracker 2022
+    |
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(plotly)
+
+d <- read.csv(Sys.getenv("lift_site")) %>% rename(Weight=Weight.Amount..lbs.) %>%
+  mutate(Date=as.Date(mdy_hms(Timestamp)))
+
+bp<-d %>% group_by(Exercise,Date) %>% summarise(Average=weighted.mean(x = Weight,w = Reps))
+
+```
+
+
+# Dead Lift
+
+```{r,echo=F,message=F}
+bp_plot<-bp %>% filter(Exercise=="Deadlift") %>% 
+  ggplot(.,aes(x=Date,y=Average)) + geom_line() +geom_point(color="red") +
+  geom_point(data = d[d$Exercise=="Deadlift",],aes(x=Date,y=Weight),color="blue",alpha=.1) + theme_classic()
+```
+
+```{r,echo=F}
+ggplotly(bp_plot)
+```
+
+
+
+# Bench Press
+
+```{r,echo=F,message=F}
+bp<-d  %>% group_by(Exercise, Date) %>% 
+  summarise(Average=weighted.mean(Weight,w = Reps))
+
+bp_plot<-bp %>% filter(Exercise=="Bench Press") %>% 
+  ggplot(.,aes(x=Date,y=Average)) + geom_line() +geom_point(color="red") +
+  geom_point(data = d[d$Exercise=="Bench Press",],aes(x=Date,y=Weight),color="blue",alpha=.1) + theme_classic()
+```
+
+```{r,echo=F}
+ggplotly(bp_plot)
+```
+
+
+
+
