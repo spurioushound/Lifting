@@ -1,7 +1,5 @@
 ---
-title: |
-    | Lift Tracker 2022
-    |
+title: Lift Tracker 2022
 output: html_document
 ---
 
@@ -19,7 +17,7 @@ bp<-d %>% group_by(Exercise,Date) %>% summarise(Average=weighted.mean(x = Weight
 ```
 
 
-# Dead Lift
+# Deadlift
 
 ```{r,echo=F,message=F}
 bp_plot<-bp %>% filter(Exercise=="Deadlift") %>% 
